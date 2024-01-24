@@ -10,7 +10,13 @@ func main() {
 	fmt.Println("c1 is:", c1, "c2 is:", c2)
 	// 格式化输出会输出字符值
 	fmt.Printf("c1 is:%c, c2 is:%c\n", c1, c2)
-	var c3 int16 = '北'
+	var c3 int32 = '北'
 	fmt.Println("c3 is:", c3)
-	fmt.Printf("c3 is:%c", c3)
+	fmt.Printf("c3 is:%c\n", c3)
+	var c4 int32 = 21271
+	fmt.Printf("c4 is:%c\n", c4)
+
+	// 字符本质存储的还是数字，因此可以做运算
+	var c5 int32 = 1 + 'a'
+	fmt.Printf("c5 is:%c\n", c5)
 }
