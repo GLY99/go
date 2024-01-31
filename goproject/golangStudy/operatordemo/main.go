@@ -28,8 +28,25 @@ func func3() {
 	// tempNum := num++ // 错误用法
 }
 
+func func4() {
+	// 假设还有97天放假问还有多少个星期多少天
+	var days int8 = 97
+	var weeks int8 = days / 7
+	var day int8 = days % 7
+	fmt.Printf("%d星期%d天\n", weeks, day)
+}
+
+func func5() {
+	// 华氏温度转换摄氏度
+	var huaShi float32 = 32
+	var sheShi float32 = 5.0 / 9 * (huaShi - 100)
+	fmt.Printf("%v对应的摄氏温度是%v\n", huaShi, sheShi)
+}
+
 func main() {
 	func1()
 	func2()
 	func3()
+	func4()
+	func5()
 }
