@@ -43,10 +43,27 @@ func func5() {
 	fmt.Printf("%v对应的摄氏温度是%v\n", huaShi, sheShi)
 }
 
+func func6() {
+	// 关系运算符案例
+	var num1 int8 = 1
+	var num2 int8 = 2
+	flag := num1 < num2
+	fmt.Println(flag) // true
+	flag = num1 < num2
+	fmt.Println(flag) // true
+	flag = num1 == num2
+	fmt.Println(flag) // false
+	flag = num1 != num2
+	fmt.Println(flag) // true
+	flag = num1 <= num2
+	fmt.Println(flag) // true
+}
+
 func main() {
 	func1()
 	func2()
 	func3()
 	func4()
 	func5()
+	func6()
 }
