@@ -83,6 +83,18 @@ func func8() {
 	fmt.Println(num1, num2)
 }
 
+func func9() {
+	num := 100
+	var ptr *int = &num
+	var ptrToPtr **int = &ptr
+	fmt.Println("num的地址即ptr的值是:", ptr)
+	fmt.Println("ptr的地址是:", &ptr)
+	fmt.Println("prt指针对应的地址中存储的值是:", *ptr)
+	fmt.Println("ptrToPtr的值是:", ptrToPtr)
+	fmt.Println("ptrToPtr的地址是:", &ptrToPtr)
+	fmt.Println("ptrToPtr指针对应的地址存储的值是:", *ptrToPtr)
+}
+
 func main() {
 	func1()
 	func2()
@@ -92,4 +104,5 @@ func main() {
 	func6()
 	func7()
 	func8()
+	func9()
 }
