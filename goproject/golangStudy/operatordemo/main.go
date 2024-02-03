@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func func1() {
 	// 如果左右都是整数，结果向下取整，即去掉小数部分保留整数部分
@@ -59,6 +61,28 @@ func func6() {
 	fmt.Println(flag) // true
 }
 
+func func7() {
+	var age int = 32
+	if age >= 18 && age <= 60 {
+		fmt.Println("ok1")
+	}
+	if !(age > 60) {
+		fmt.Println("ok2")
+	}
+	if age > 18 || age < 0 {
+		fmt.Println("ok3")
+	}
+}
+
+func func8() {
+	num1 := 1
+	num2 := 2
+	var tempNum int = num1
+	num1 = num2
+	num2 = tempNum
+	fmt.Println(num1, num2)
+}
+
 func main() {
 	func1()
 	func2()
@@ -66,4 +90,6 @@ func main() {
 	func4()
 	func5()
 	func6()
+	func7()
+	func8()
 }
