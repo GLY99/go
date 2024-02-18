@@ -43,7 +43,7 @@ func func4() {
 
 func func5() {
 	var year int32 = 2014
-	if year%4 == 0 && year%100 != 0 && year%400 == 0 {
+	if (year%4 == 0 && year%100 != 0) || year%400 == 0 {
 		fmt.Printf("run nian\n")
 	} else {
 		fmt.Printf("no run nian\n")
