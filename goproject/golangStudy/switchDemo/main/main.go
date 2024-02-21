@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"golangStudy/switchDemo/demos"
+)
 
 func func1() {
 	fmt.Printf("请输入a-g:\n")
@@ -82,4 +85,7 @@ func main() {
 	func3()
 	func4()
 	func5()
+	demos.Func1()
+	demos.Func2()
+	demos.Func3()
 }
