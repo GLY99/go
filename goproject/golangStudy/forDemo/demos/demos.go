@@ -14,4 +14,22 @@ func Func1() {
 		fmt.Printf("hellow world\n")
 	}
 	fmt.Printf("%d\n", j)
+
+	// for 循环写法3，类似while
+	var n int64 = 0
+	for n < 10 {
+		fmt.Printf("hellow world\n")
+		n++
+	}
+
+	// 无限for循环
+	var m int64 = 0
+	for {
+		if m < 10 {
+			fmt.Printf("hellow world\n")
+			m++
+		} else {
+			break
+		}
+	}
 }
