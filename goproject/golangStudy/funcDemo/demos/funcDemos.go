@@ -24,7 +24,7 @@ func Cal(num1 float64, num2 float64, operator byte) (res float64) {
 func GetSumAndSub(num1 float64, num2 float64) (sum float64, sub float64) {
 	sum = num1 + num2
 	sub = num1 - num2
-	return sum, sub
+	return
 }
 
 func FeboNums(num int) int {
@@ -49,4 +49,47 @@ func GetPeachs(day int) int {
 		return 1
 	}
 	return 2 * (GetPeachs(day+1) + 1)
+}
+
+func TestValueTransfer(num int) {
+	num++
+}
+
+func TestQuoteTransfer(num *int) {
+	*num++
+}
+
+func GetSum(num1 int, num2 int) (res int) {
+	res = num1 + num2
+	return res
+}
+
+func TestFuncTransfer1(myFunc func(num1 int, num2 int) (res int), num1 int, num2 int) int {
+	return myFunc(num1, num2)
+}
+
+func TestFuncTransfer2(myFunc func(int, int) int, num1 int, num2 int) int {
+	return myFunc(num1, num2)
+}
+
+type myFuncType func(int, int) int
+
+func TestFuncTransfer3(myFunc myFuncType, num1 int, num2 int) int {
+	return myFunc(num1, num2)
+}
+
+func GetManyNumsSum1(args ...int) int {
+	var sum int
+	for _, val := range args {
+		sum = sum + val
+	}
+	return sum
+}
+
+func GetManyNumsSum2(args ...int) int {
+	var sum int
+	for i := 0; i < len(args); i++ {
+		sum = sum + args[i]
+	}
+	return sum
 }
