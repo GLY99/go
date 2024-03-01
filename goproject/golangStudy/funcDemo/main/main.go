@@ -5,6 +5,15 @@ import (
 	demo "golangStudy/funcDemo/demos" // demo是别名
 )
 
+// 全局匿名函数定义
+var funcB = func(n1 int, n2 int) int {
+	return n1 - n2
+}
+
+func init() {
+	fmt.Printf("init main\n")
+}
+
 func main() {
 	res := demo.Cal(1, 2, '+')
 	fmt.Printf("%.2f\n", res)
@@ -46,4 +55,24 @@ func main() {
 
 	fmt.Printf("%d\n", demo.GetManyNumsSum1(1, 2, 3)) // 6
 	fmt.Printf("%d\n", demo.GetManyNumsSum2(1, 2, 3)) // 6
+
+	// 通过地址交换变量
+	n1 := 10
+	n2 := 20
+	demo.Swap(&n1, &n2)
+	fmt.Printf("n1 %d, n2 %d\n", n1, n2)
+
+	// 匿名函数
+	result := func(n1 int, n2 int) int {
+		return n1 + n2
+	}(1, 2)
+	fmt.Printf("result is %d\n", result) // 3
+
+	funcA := func(n1 int, n2 int) int {
+		return n1 - n2
+	}
+	result = funcA(2, 1)
+	fmt.Printf("funcA type is %T, result=%d", funcA, result) // funcA type is func(int, int) int, result=1
+
+	funcB(2, 1)
 }
