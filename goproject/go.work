@@ -4,4 +4,5 @@ use (
     ./golangStudy
     ./leetcode
     ./go-project/myFamilyAccount
+    ./go-project/customerManagementSystem
 )
