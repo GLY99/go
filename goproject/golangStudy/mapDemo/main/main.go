@@ -11,7 +11,7 @@ func main() {
 	map1 = make(map[int]string, 2)
 	map1[1] = "a"
 	map1[2] = "b"
-	fmt.Println(map1)
+	fmt.Printf("%v\n", map1)
 
 	// map的使用
 	// 先声明再make
