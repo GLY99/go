@@ -2,6 +2,18 @@ package main
 
 import "fmt"
 
+func add1(numSlice []int) []int {
+	return append(numSlice, 0)
+}
+
+func add2(numSlice []int) {
+	numSlice = append(numSlice, 0)
+}
+
+func add3(numSlice *[]int) {
+	*numSlice = append(*numSlice, 0)
+}
+
 func main() {
 	var arr = [5]int{1, 2, 3, 4, 5}
 	slice := arr[1:3]                         // slice指向arr数组的下标为[1, 3)的元素
@@ -72,4 +84,18 @@ func main() {
 	fmt.Printf("slice5的地址是%v\n", &slice5[0])       // slice5的地址是0xc00000e240
 	fmt.Printf("sliceCopy的地址是%v\n", &sliceCopy[0]) // sliceCopy的地址是0xc00000e258
 	fmt.Println(slice5, sliceCopy)                 // [1 2 3] [4]
+
+	// 在其他函数里面对切片append虽然传递了地址过去，但是不会影响外面的值
+	// 原因是size和cap是传递的值,只有切片里面指向数组首地址的指针传递的是地址。
+	numSlice1 := make([]int, 0, 5)
+	fmt.Println(numSlice1, len(numSlice1), cap(numSlice1)) // [] 0 5
+	numSlice1 = add1(numSlice1)
+	fmt.Println(numSlice1, len(numSlice1), cap(numSlice1)) // [0] 1 5
+	add3(&numSlice1)
+	fmt.Println(numSlice1, len(numSlice1), cap(numSlice1)) // [0， 0] 2 5
+
+	numSlice2 := make([]int, 0, 5)
+	fmt.Println(numSlice2, len(numSlice2), cap(numSlice2)) // [] 0 5
+	add2(numSlice2)
+	fmt.Println(numSlice2, len(numSlice2), cap(numSlice2)) // [] 0 5
 }
