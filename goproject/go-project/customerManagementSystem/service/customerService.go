@@ -53,21 +53,20 @@ func (cs *CustomerService) UpdateCustomer(id int, name string, gender string, ag
 	if idx == -1 {
 		fmt.Printf("id为%d的客户不存在!\n", id)
 	} else {
-		customer := cs.customers[idx]
 		if name != "" {
-			customer.Name = name
+			cs.customers[idx].Name = name
 		}
 		if gender != "" {
-			customer.Gender = gender
+			cs.customers[idx].Gender = gender
 		}
 		if age != -1 {
-			customer.Age = age
+			cs.customers[idx].Age = age
 		}
 		if phone != "" {
-			customer.Phone = phone
+			cs.customers[idx].Phone = phone
 		}
 		if email != "" {
-			customer.Email = email
+			cs.customers[idx].Email = email
 		}
 		fmt.Printf("修改id为%d的客户信息成功\n", id)
 	}
