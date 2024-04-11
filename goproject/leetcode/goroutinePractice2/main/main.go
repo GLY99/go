@@ -40,15 +40,8 @@ func readResChan(resChan chan int, flagChan chan bool) {
 func closeResChan(resChan chan int, closeResChanFlag chan bool) {
 	defer close(closeResChanFlag)
 	defer close(resChan)
-	count := 0
-	for {
-		if count == 8 {
-			break
-		}
-		v := <-closeResChanFlag
-		if v {
-			count++
-		}
+	for i := 0; i < 8; i++ {
+		<-closeResChanFlag
 	}
 }
 
