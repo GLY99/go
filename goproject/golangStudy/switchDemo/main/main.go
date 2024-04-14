@@ -29,6 +29,7 @@ func func1() {
 	}
 }
 
+// switch当初if else使用
 func func2() {
 	var a int8 = 1
 	switch {
@@ -67,13 +68,13 @@ func func5() {
 	var x interface{}
 	var y float32 = 10.0
 	x = y
-	switch i := x.(type) {
+	switch i := x.(type) { // 这里如果匹配到前三个case,会将x的类型转换后赋值给i
 	case nil:
-		fmt.Printf("x的数据类型是%T\n", i)
+		fmt.Printf("i=%v, x的数据类型是%T\n", i, i)
 	case float32:
-		fmt.Printf("x的数据类型是float32\n")
+		fmt.Printf("i=%v, x的数据类型是float32\n", i)
 	case int8:
-		fmt.Printf("x的数据类型是int8\n")
+		fmt.Printf("i=%v, x的数据类型是int8\n", i)
 	default:
 		fmt.Printf("unknown type\n")
 	}
