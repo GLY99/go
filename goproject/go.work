@@ -5,4 +5,5 @@ use (
     ./leetcode
     ./go-project/myFamilyAccount
     ./go-project/customerManagementSystem
+    ./dataStructure
 )
