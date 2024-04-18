@@ -45,7 +45,7 @@ func main() {
 	val, findRes := map4[2]
 	fmt.Println(val, findRes) // B true
 	val, findRes = map4[1]
-	fmt.Println(val, findRes) // 空值 false
+	fmt.Println(val, findRes) // 零值 false
 
 	// map遍历
 	for k, v := range map4 {
