@@ -2,6 +2,7 @@ package main
 
 import "fmt"
 
+// 带头的双向链表
 type Link struct {
 	Pre  *Link
 	Next *Link
