@@ -12,6 +12,18 @@ func func1() {
 	fmt.Print(num, *ptr)
 }
 
+func func2() {
+	a := 1
+	b := &a            // 取a变量地址给b,a b最终都指向1的内存空间
+	*b = 2             // a b直接会互相影响
+	fmt.Println(a, *b) // 2 2
+	a = 3
+	fmt.Println(a, *b)    // 3 3
+	c := *b               // 取b指针指向的内存地址的值给c,这里相当于值copy
+	c = 4                 // c修改不会影响a b
+	fmt.Println(a, *b, c) //3 3 4
+}
+
 // 基本数据类型和string互相转换
 func main() {
 	// 通过&获取变量的地址
@@ -28,4 +40,5 @@ func main() {
 	fmt.Printf("ptr指向的地址存储的值是%v\n", *ptr)
 
 	func1()
+	func2()
 }
