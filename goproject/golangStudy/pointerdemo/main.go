@@ -19,7 +19,7 @@ func func2() {
 	fmt.Println(a, *b) // 2 2
 	a = 3
 	fmt.Println(a, *b)    // 3 3
-	c := *b               // 取b指针指向的内存地址的值给c,这里相当于值copy
+	c := *b               // 取b指针指向的内存地址的值给c,这里会将b指向的值copy一份给c
 	c = 4                 // c修改不会影响a b
 	fmt.Println(a, *b, c) //3 3 4
 }
