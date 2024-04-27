@@ -80,4 +80,6 @@ func main() {
 	list(newhead)
 	newhead = delete(newhead, 3)
 	list(newhead)
+	insert(newhead, &node1)
+	list(newhead)
 }
