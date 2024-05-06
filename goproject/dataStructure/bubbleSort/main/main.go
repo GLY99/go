@@ -6,12 +6,17 @@ func bubbleSort(arr *[10]int) {
 	// 从小到大冒泡排序
 	length := len(*arr)
 	for i := 0; i < length-1; i++ {
+		flag := false
 		for j := 0; j < length-1; j++ {
 			if (*arr)[j] > (*arr)[j+1] {
 				tmp := (*arr)[j]
 				(*arr)[j] = (*arr)[j+1]
 				(*arr)[j+1] = tmp
+				flag = true
 			}
+		}
+		if !flag {
+			break
 		}
 	}
 }
