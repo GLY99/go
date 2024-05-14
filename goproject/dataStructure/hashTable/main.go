@@ -6,11 +6,22 @@ import (
 )
 
 func main() {
-	myHashTable := hashTable.NewHashTable(1)
+	myHashTable := hashTable.NewHashTable(5)
 	fmt.Println(myHashTable.List())
-	myHashTable.Insert(1)
-	myHashTable.Insert(0)
-	myHashTable.Insert(3)
-	myHashTable.Insert(2)
+	for i := 1; i < 20; i++ {
+		myHashTable.Insert(i)
+	}
+	fmt.Println(myHashTable.List())
+	for i := 5; i <= 15; i += 5 {
+		myHashTable.Delete(i)
+	}
+	fmt.Println(myHashTable.List())
+	for i := 5; i <= 15; i += 5 {
+		myHashTable.Insert(i)
+	}
+	fmt.Println(myHashTable.List())
+	node := myHashTable.Get(15)
+	fmt.Printf("%p\n", node)
+	myHashTable.Update(15, 100)
 	fmt.Println(myHashTable.List())
 }

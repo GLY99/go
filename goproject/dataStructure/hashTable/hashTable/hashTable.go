@@ -43,6 +43,53 @@ func (hashTable *HashTable) Insert(num int) {
 	}
 }
 
+func (hashTable *HashTable) Delete(num int) {
+	hash_code := hashTable.hash(num)
+	if hashTable.arr[hash_code] == nil {
+		return
+	} else {
+		head := hashTable.arr[hash_code]
+		if head.Val == num {
+			hashTable.arr[hash_code] = head.Next
+			return
+		} else {
+			perNode := head
+			curNode := head.Next
+			for curNode != nil {
+				if curNode.Val == num {
+					perNode.Next = curNode.Next
+				}
+				curNode = curNode.Next
+			}
+		}
+	}
+}
+
+func (hashTable *HashTable) Get(num int) *Node {
+	hash_code := hashTable.hash(num)
+	if hashTable.arr[hash_code] == nil {
+		return nil
+	} else {
+		node := hashTable.arr[hash_code]
+		for node != nil {
+			if node.Val == num {
+				return node
+			}
+			node = node.Next
+		}
+		return nil
+	}
+}
+
+func (hashTable *HashTable) Update(num int, newNum int) {
+	node := hashTable.Get(num)
+	if node == nil {
+		return
+	}
+	hashTable.Delete(num)
+	hashTable.Insert(newNum)
+}
+
 func (hashTable *HashTable) List() map[int][]int {
 	myMap := make(map[int][]int, hashTable.Size)
 	for idx, node := range hashTable.arr {
