@@ -17,7 +17,7 @@ func mainMenu() int {
 		fmt.Printf("请选择1-3:")
 		_, err := fmt.Scanf("%d\n", &num)
 		if err != nil {
-			fmt.Println("输入错误,退出系统!")
+			fmt.Println("输入错误,退出系统!!!")
 			loop = false
 			continue
 		}
