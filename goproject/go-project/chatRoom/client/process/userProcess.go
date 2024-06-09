@@ -24,7 +24,7 @@ func (userProcess *UserProcess) Login(userId int, passWd string) (err error) {
 	msg.Type = message.LoginMsgType
 	var loginMsg message.LoginMsg
 	loginMsg.UserId = userId
-	loginMsg.Passwd = passWd
+	loginMsg.UserPwd = passWd
 	data, err := json.Marshal(loginMsg)
 	if err != nil {
 		fmt.Printf("json.Marshal(loginMsg) err, err=%v", err)
@@ -37,6 +37,7 @@ func (userProcess *UserProcess) Login(userId int, passWd string) (err error) {
 		return
 	}
 	transfer := &utils.Transfer{Conn: conn}
+	fmt.Printf("send user data %s\n", data)
 	err = transfer.WritePkg(data)
 	if err != nil {
 		fmt.Printf("transfer.WritePkg(data) err, err=%v", err)
@@ -57,11 +58,10 @@ func (userProcess *UserProcess) Login(userId int, passWd string) (err error) {
 		// 启动协程监听服务器发送的数据
 		go ProcessServerMsg(conn)
 		ShowMenu()
-	} else if loginRspMsg.Code == 500 {
+	} else {
 		fmt.Printf("%v\n", loginRspMsg.Msg)
 		err = errors.New(loginRspMsg.Msg)
 		return
 	}
 	return
-
 }

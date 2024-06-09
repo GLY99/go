@@ -2,6 +2,7 @@ package process
 
 import (
 	"chatRoom/common/message"
+	"chatRoom/server/model"
 	"chatRoom/server/utils"
 	"encoding/json"
 	"fmt"
@@ -23,11 +24,22 @@ func (userProcess *UserProcess) ServerProcessLogin(msg *message.Message) (err er
 	var responseMsg message.Message
 	responseMsg.Type = message.LoginRspMsgType
 	var loginRspMsg message.LoginRspMsg
-	if loginMsg.UserId == 1 && loginMsg.Passwd == "123456" {
-		loginRspMsg.Code = 200
+	user, err := model.GlobalUserDao.Login(loginMsg.UserId, loginMsg.UserPwd)
+	if err != nil {
+		fmt.Printf("user %v login fail, err is %v\n", loginMsg.UserId, err)
+		if err == model.ErrorUserNotExists {
+			loginRspMsg.Code = 404
+			loginRspMsg.Msg = err.Error()
+		} else if err == model.ErrorUserPwd {
+			loginRspMsg.Code = 421
+			loginRspMsg.Msg = err.Error()
+		} else {
+			loginRspMsg.Code = 500
+			loginRspMsg.Msg = "unknown error!"
+		}
 	} else {
-		loginRspMsg.Code = 500
-		loginRspMsg.Msg = "user not exist!"
+		loginRspMsg.Code = 200
+		fmt.Printf("user %v 登录成功\n", user.UserId)
 	}
 	data, err := json.Marshal(loginRspMsg)
 	if err != nil {

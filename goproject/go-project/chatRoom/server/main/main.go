@@ -1,9 +1,12 @@
 package main
 
 import (
+	"chatRoom/server/model"
+	"chatRoom/server/myRedis"
 	"chatRoom/server/process"
 	"fmt"
 	"net"
+	"time"
 )
 
 func processMsg(conn net.Conn) {
@@ -17,7 +20,13 @@ func processMsg(conn net.Conn) {
 	}
 }
 
+func initGlobalUserDao() {
+	model.GlobalUserDao = model.NewUserDao(myRedis.GlobalRedisPool)
+}
+
 func main() {
+	myRedis.InitPool("127.0.0.1:6379", 16, 0, 300*time.Second)
+	initGlobalUserDao()
 	fmt.Println("服务器再8848端口监听")
 	listen, err := net.Listen("tcp", "0.0.0.0:8848")
 	if err != nil {
