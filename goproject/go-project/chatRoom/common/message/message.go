@@ -1,9 +1,10 @@
 package message
 
 const (
-	LoginMsgType    = "LoginMsgType"
-	LoginRspMsgType = "LoginRspMsgType"
-	RegisterMsgType = "RegisterMsgType"
+	LoginMsgType       = "LoginMsgType"
+	LoginRspMsgType    = "LoginRspMsgType"
+	RegisterMsgType    = "RegisterMsgType"
+	RegisterRspMsgType = "RegisterRspMsgType"
 )
 
 type Message struct {
@@ -23,5 +24,12 @@ type LoginRspMsg struct {
 }
 
 type RegisterMsg struct {
-	// 注册
+	UserId   int    `json:"user_id"`
+	UserName string `json:"user_name"`
+	UserPwd  string `json:"user_pwd"`
+}
+
+type RegisterRspMsg struct {
+	Code int    `json:"code"`
+	Msg  string `json:"msg"`
 }

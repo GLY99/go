@@ -20,8 +20,10 @@ func (processor *Processor) ServerProcessMessage(msg *message.Message) (err erro
 		err = userProcess.ServerProcessLogin(msg)
 	case message.RegisterMsgType:
 		// 处理注册
+		userProcess := &UserProcess{Conn: processor.Conn}
+		err = userProcess.ServerProcessRegister(msg)
 	default:
-		fmt.Println("消息类型不存在,无法处理...")
+		fmt.Println("unknown msg type, can not process it")
 	}
 	return
 }

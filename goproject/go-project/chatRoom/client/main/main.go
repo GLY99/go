@@ -78,7 +78,9 @@ func loginMenu() {
 				num := mainMenu()
 				if num == 1 {
 					continue
-				} else {
+				} else if num == 2 {
+					registerMenu()
+				} else if num == 3 {
 					exitSys()
 				}
 			}
@@ -94,12 +96,67 @@ func loginMenu() {
 				num := mainMenu()
 				if num == 1 {
 					continue
-				} else {
+				} else if num == 2 {
+					registerMenu()
+				} else if num == 3 {
 					exitSys()
 				}
 			}
 		} else {
-			fmt.Printf("登录成功\n")
+			loop = false
+		}
+		if !loop {
+			break
+		}
+	}
+}
+
+func registerMenu() {
+	fmt.Println("注册用户")
+	var userId int
+	var userName string
+	var userPwd string
+	loop := true
+	for {
+		fmt.Printf("请输入要注册的用户id:")
+		_, err1 := fmt.Scanf("%d\n", &userId)
+		fmt.Printf("请输入要注册的用户密码:")
+		_, err2 := fmt.Scanf("%s\n", &userPwd)
+		fmt.Printf("请输入要注册的用户昵称:")
+		_, err3 := fmt.Scanf("%s\n", &userName)
+		if err1 != nil || err2 != nil || err3 != nil {
+			fmt.Println("填写注册信息失败,是否重新填写？")
+			if getYOrN() {
+				continue
+			} else {
+				num := mainMenu()
+				if num == 1 {
+					loginMenu()
+				} else if num == 2 {
+					continue
+				} else if num == 3 {
+					exitSys()
+				}
+			}
+		}
+		userProcess := &process.UserProcess{}
+		err := userProcess.Register(userId, userPwd, userName)
+		if err != nil {
+			fmt.Printf("register user info fail, err=%v\n", err)
+			fmt.Printf("是否重新注册？")
+			if getYOrN() {
+				continue
+			} else {
+				num := mainMenu()
+				if num == 1 {
+					continue
+				} else if num == 2 {
+					registerMenu()
+				} else if num == 3 {
+					exitSys()
+				}
+			}
+		} else {
 			loop = false
 		}
 		if !loop {
@@ -113,10 +170,14 @@ func exitSys() {
 }
 
 func main() {
-	num := mainMenu()
-	if num == 1 {
-		loginMenu()
-	} else if num == 3 {
-		exitSys()
+	for {
+		num := mainMenu()
+		if num == 1 {
+			loginMenu()
+		} else if num == 2 {
+			registerMenu()
+		} else if num == 3 {
+			exitSys()
+		}
 	}
 }

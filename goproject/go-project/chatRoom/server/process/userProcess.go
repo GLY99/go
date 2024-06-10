@@ -56,3 +56,44 @@ func (userProcess *UserProcess) ServerProcessLogin(msg *message.Message) (err er
 	err = transfer.WritePkg(data)
 	return
 }
+
+func (userProcess *UserProcess) ServerProcessRegister(msg *message.Message) (err error) {
+	// 处理注册
+	var registerMsg message.RegisterMsg
+	err = json.Unmarshal([]byte(msg.Data), &registerMsg)
+	if err != nil {
+		fmt.Printf("unmarshal register msg fail, err=%v", err)
+		return
+	}
+	var responseMsg message.Message
+	var registerRspMsg message.RegisterRspMsg
+	responseMsg.Type = message.RegisterRspMsgType
+	user, err := model.GlobalUserDao.Register(registerMsg.UserId, registerMsg.UserPwd, registerMsg.UserName)
+	if err != nil {
+		fmt.Printf("register user fail, err=%v\n", err)
+		if err == model.ErrorUserExists {
+			registerRspMsg.Code = 421
+			registerRspMsg.Msg = err.Error()
+		} else {
+			registerRspMsg.Code = 500
+			registerRspMsg.Msg = "unknown error!"
+		}
+	} else {
+		registerRspMsg.Code = 200
+		fmt.Printf("用户%d注册成功\n", user.UserId)
+	}
+	data, err := json.Marshal(registerRspMsg)
+	if err != nil {
+		fmt.Printf("marshal register rsp msg fail, err=%v\n", err)
+		return err
+	}
+	responseMsg.Data = string(data)
+	data, err = json.Marshal(responseMsg)
+	if err != nil {
+		fmt.Printf("marshal rsp msg fail, err=%v\n", err)
+		return err
+	}
+	transfer := &utils.Transfer{Conn: userProcess.Conn}
+	err = transfer.WritePkg(data)
+	return
+}
