@@ -1,10 +1,17 @@
 package message
 
 const (
-	LoginMsgType       = "LoginMsgType"
-	LoginRspMsgType    = "LoginRspMsgType"
-	RegisterMsgType    = "RegisterMsgType"
-	RegisterRspMsgType = "RegisterRspMsgType"
+	LoginMsgType            = "LoginMsgType"
+	LoginRspMsgType         = "LoginRspMsgType"
+	RegisterMsgType         = "RegisterMsgType"
+	RegisterRspMsgType      = "RegisterRspMsgType"
+	UserStatusNofityMsgType = "UserStatusNofityMsgType"
+)
+
+const (
+	UserOnlie = iota
+	UserOffline
+	UserBusy
 )
 
 type Message struct {
@@ -19,8 +26,9 @@ type LoginMsg struct {
 }
 
 type LoginRspMsg struct {
-	Code int    `json:"code"`
-	Msg  string `json:"msg"`
+	Code    int    `json:"code"`
+	Msg     string `json:"msg"`
+	UserIds []int  `json:"user_ids"`
 }
 
 type RegisterMsg struct {
@@ -32,4 +40,9 @@ type RegisterMsg struct {
 type RegisterRspMsg struct {
 	Code int    `json:"code"`
 	Msg  string `json:"msg"`
+}
+
+type UserStatusNotifyMsg struct {
+	UserId int `json:"user_id"`
+	Status int `json:"status"`
 }

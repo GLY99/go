@@ -10,7 +10,8 @@ import (
 )
 
 type UserProcess struct {
-	Conn net.Conn
+	Conn   net.Conn
+	UserId int
 }
 
 func (userProcess *UserProcess) ServerProcessLogin(msg *message.Message) (err error) {
@@ -39,6 +40,12 @@ func (userProcess *UserProcess) ServerProcessLogin(msg *message.Message) (err er
 		}
 	} else {
 		loginRspMsg.Code = 200
+		userProcess.UserId = loginMsg.UserId
+		globalUserMgr.AddOnlieUser(userProcess)
+		userProcess.NofityOthersOnlieUser(loginMsg.UserId)
+		for userId, _ := range globalUserMgr.onlieUsers {
+			loginRspMsg.UserIds = append(loginRspMsg.UserIds, userId)
+		}
 		fmt.Printf("user %v 登录成功\n", user.UserId)
 	}
 	data, err := json.Marshal(loginRspMsg)
@@ -96,4 +103,38 @@ func (userProcess *UserProcess) ServerProcessRegister(msg *message.Message) (err
 	transfer := &utils.Transfer{Conn: userProcess.Conn}
 	err = transfer.WritePkg(data)
 	return
+}
+
+func (userProcess *UserProcess) NofityOthersOnlieUser(userId int) {
+	for id, up := range globalUserMgr.onlieUsers {
+		if id == userId {
+			continue
+		}
+		up.NotifyStatus(userId)
+	}
+}
+
+func (userProcess *UserProcess) NotifyStatus(userId int) {
+	var msg message.Message
+	msg.Type = message.UserStatusNofityMsgType
+	var notidyStatusMsg message.UserStatusNotifyMsg
+	notidyStatusMsg.UserId = userId
+	notidyStatusMsg.Status = message.UserOnlie
+	data, err := json.Marshal(notidyStatusMsg)
+	if err != nil {
+		fmt.Printf("json marshal fail in NotifyStatus, err=%v\n", err)
+		return
+	}
+	msg.Data = string(data)
+	data, err = json.Marshal(msg)
+	if err != nil {
+		fmt.Printf("json marshal fail in NotifyStatus, err=%v\n", err)
+		return
+	}
+	tf := &utils.Transfer{Conn: userProcess.Conn}
+	err = tf.WritePkg(data)
+	if err != nil {
+		fmt.Printf("send user status msg fail, err=%v\n", err)
+		return
+	}
 }

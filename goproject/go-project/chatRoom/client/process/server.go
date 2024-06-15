@@ -2,6 +2,8 @@ package process
 
 import (
 	"chatRoom/client/utils"
+	"chatRoom/common/message"
+	"encoding/json"
 	"fmt"
 	"net"
 	"os"
@@ -10,7 +12,6 @@ import (
 // 显示登录成功后的界面
 func ShowMenu() {
 	for {
-		fmt.Println("----------恭喜xxx登录成功----------")
 		fmt.Println("----------1.显示在线用户列表----------")
 		fmt.Println("----------2.发送消息----------")
 		fmt.Println("----------3.消息列表----------")
@@ -20,7 +21,7 @@ func ShowMenu() {
 		fmt.Scanf("%d\n", &key)
 		switch key {
 		case 1:
-			fmt.Println("显示在线用户列表")
+			outputOnlieUser()
 		case 2:
 			fmt.Println("发送消息")
 		case 3:
@@ -43,6 +44,17 @@ func ProcessServerMsg(conn net.Conn) {
 			fmt.Printf("client transfer.ReadPkg() fail, err=%v", err)
 			return
 		}
-		fmt.Printf("receive server msg: %v\n", msg)
+		switch msg.Type {
+		case message.UserStatusNofityMsgType:
+			var userStatusNotifyMsg message.UserStatusNotifyMsg
+			err := json.Unmarshal([]byte(msg.Data), &userStatusNotifyMsg)
+			if err != nil {
+				fmt.Printf("unmatshal msg data fail in ProcessServerMsg, err=%v\n", err)
+				break
+			}
+			updateUserStatus(&userStatusNotifyMsg)
+		default:
+			fmt.Println("server send msg can not process!!!")
+		}
 	}
 }

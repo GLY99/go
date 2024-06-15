@@ -57,6 +57,14 @@ func (userProcess *UserProcess) Login(userId int, passWd string) (err error) {
 	if loginRspMsg.Code == 200 {
 		// 启动协程监听服务器发送的数据
 		fmt.Println("登录成功！")
+		// 显示当前在线的用户
+		for _, id := range loginRspMsg.UserIds {
+			if id == userId {
+				continue
+			}
+			fmt.Printf("userId: %d\n", id)
+			onlineUserMap[id] = &User{UserId: id, UserStatus: message.UserOnlie}
+		}
 		go ProcessServerMsg(conn)
 		ShowMenu()
 	} else {

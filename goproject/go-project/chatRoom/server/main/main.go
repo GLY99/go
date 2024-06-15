@@ -27,6 +27,7 @@ func initGlobalUserDao() {
 func main() {
 	myRedis.InitPool("127.0.0.1:6379", 16, 0, 300*time.Second)
 	initGlobalUserDao()
+	process.InitGlobalUserMgr()
 	fmt.Println("服务器再8848端口监听")
 	listen, err := net.Listen("tcp", "0.0.0.0:8848")
 	if err != nil {
