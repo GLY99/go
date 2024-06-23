@@ -6,6 +6,9 @@ const (
 	RegisterMsgType         = "RegisterMsgType"
 	RegisterRspMsgType      = "RegisterRspMsgType"
 	UserStatusNofityMsgType = "UserStatusNofityMsgType"
+	SmsMsgType              = "SmsMsgType"
+	LogoutMsgType           = "LogoutMsgType"
+	LogoutRspMsgType        = "LogoutRspMsgType"
 )
 
 const (
@@ -45,4 +48,25 @@ type RegisterRspMsg struct {
 type UserStatusNotifyMsg struct {
 	UserId int `json:"user_id"`
 	Status int `json:"status"`
+}
+
+type User struct {
+	UserId     int    `json:"user_id"`
+	UserPwd    string `json:"user_pwd"`
+	UserName   string `json:"user_name"`
+	UserStatus int    `json:"user_status"`
+}
+
+type SmsMsg struct {
+	Content string `json:"content"`
+	User
+}
+
+type LogoutMsg struct {
+	User
+}
+
+type LogoutRspMsg struct {
+	Code int    `json:"code"`
+	Msg  string `json:"msg"`
 }

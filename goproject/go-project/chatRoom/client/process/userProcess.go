@@ -57,6 +57,8 @@ func (userProcess *UserProcess) Login(userId int, passWd string) (err error) {
 	if loginRspMsg.Code == 200 {
 		// 启动协程监听服务器发送的数据
 		fmt.Println("登录成功！")
+		CurUser.Conn = conn
+		CurUser.User = message.User{UserId: userId, UserPwd: passWd, UserStatus: message.UserOnlie}
 		// 显示当前在线的用户
 		for _, id := range loginRspMsg.UserIds {
 			if id == userId {
@@ -127,6 +129,61 @@ func (userProcess *UserProcess) Register(userId int, userPwd string, userName st
 	} else {
 		fmt.Printf("register user fail, err=%v\n", registerRspMsg.Msg)
 		err = errors.New(registerRspMsg.Msg)
+		return
+	}
+	return
+}
+
+func (userProcess *UserProcess) Logout(userId int) (err error) {
+	// 连接服务器
+	conn, err := net.Dial("tcp", "127.0.0.1:8848")
+	if err != nil {
+		fmt.Printf("net.Dial fail, err=%v", err)
+		return
+	}
+	// 延时关闭
+	defer conn.Close()
+	// 构造需要发送给server的注册信息
+	var msg message.Message
+	var logoutMsg message.LogoutMsg
+	msg.Type = message.LogoutMsgType
+	logoutMsg.UserId = userId
+	data, err := json.Marshal(logoutMsg)
+	if err != nil {
+		fmt.Printf("marshal logoutMsg fail, err=%v\n", err)
+		return
+	}
+	msg.Data = string(data)
+	data, err = json.Marshal(msg)
+	if err != nil {
+		fmt.Printf("marshal msg fail when logout, err=%v\n", err)
+		return
+	}
+	// 发送数据
+	transfer := &utils.Transfer{Conn: conn}
+	fmt.Printf("send logout data %s\n", data)
+	err = transfer.WritePkg(data)
+	if err != nil {
+		fmt.Printf("send logout data fail, err=%v", err)
+		return
+	}
+	// 接受服务器响应
+	msg, err = transfer.ReadPkg()
+	if err != nil {
+		fmt.Printf("read logout rsp msg fail, err=%v", err)
+		return
+	}
+	var logoutRsp message.LoginRspMsg
+	err = json.Unmarshal([]byte(msg.Data), &logoutRsp)
+	if err != nil {
+		fmt.Printf("unmarshal register rsp msg fail, err=%v", err)
+		return
+	}
+	if logoutRsp.Code == 200 {
+		fmt.Println("退出成功！")
+	} else {
+		fmt.Printf("logout fail, err=%v\n", logoutRsp.Msg)
+		err = errors.New(logoutRsp.Msg)
 		return
 	}
 	return

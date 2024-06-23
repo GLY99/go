@@ -22,6 +22,14 @@ func (processor *Processor) ServerProcessMessage(msg *message.Message) (err erro
 		// 处理注册
 		userProcess := &UserProcess{Conn: processor.Conn}
 		err = userProcess.ServerProcessRegister(msg)
+	case message.SmsMsgType:
+		// 处理发送消息
+		smsProcess := &SmsProcess{}
+		smsProcess.SendGroupMsg(msg)
+	case message.LogoutMsgType:
+		// 处理退出
+		userProcess := &UserProcess{Conn: processor.Conn}
+		userProcess.ServerProcessLogout(msg)
 	default:
 		fmt.Println("unknown msg type, can not process it")
 	}

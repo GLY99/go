@@ -1,6 +1,7 @@
 package process
 
 import (
+	"chatRoom/client/model"
 	"chatRoom/common/message"
 	"fmt"
 )
@@ -13,6 +14,7 @@ type User struct {
 }
 
 var onlineUserMap map[int]*User = make(map[int]*User, 1024)
+var CurUser model.CurUser // 在登录成功后初始化单例
 
 func updateUserStatus(notifyUserStatusMsg *message.UserStatusNotifyMsg) {
 	user, ok := onlineUserMap[notifyUserStatusMsg.UserId]
@@ -22,10 +24,18 @@ func updateUserStatus(notifyUserStatusMsg *message.UserStatusNotifyMsg) {
 			UserStatus: notifyUserStatusMsg.Status,
 		}
 	} else {
+		if notifyUserStatusMsg.Status == message.UserOffline {
+			removeOnlieUser(notifyUserStatusMsg.UserId)
+			return
+		}
 		user.UserStatus = message.UserOnlie
 		onlineUserMap[notifyUserStatusMsg.UserId] = user
 	}
 	outputOnlieUser()
+}
+
+func removeOnlieUser(userId int) {
+	delete(onlineUserMap, userId)
 }
 
 func outputOnlieUser() {

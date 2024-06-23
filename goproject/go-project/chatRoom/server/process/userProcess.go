@@ -42,7 +42,7 @@ func (userProcess *UserProcess) ServerProcessLogin(msg *message.Message) (err er
 		loginRspMsg.Code = 200
 		userProcess.UserId = loginMsg.UserId
 		globalUserMgr.AddOnlieUser(userProcess)
-		userProcess.NofityOthersOnlieUser(loginMsg.UserId)
+		userProcess.NofityOthersOnlieUser(loginMsg.UserId, message.UserOnlie)
 		for userId, _ := range globalUserMgr.onlieUsers {
 			loginRspMsg.UserIds = append(loginRspMsg.UserIds, userId)
 		}
@@ -105,21 +105,21 @@ func (userProcess *UserProcess) ServerProcessRegister(msg *message.Message) (err
 	return
 }
 
-func (userProcess *UserProcess) NofityOthersOnlieUser(userId int) {
+func (userProcess *UserProcess) NofityOthersOnlieUser(userId int, status int) {
 	for id, up := range globalUserMgr.onlieUsers {
 		if id == userId {
 			continue
 		}
-		up.NotifyStatus(userId)
+		up.NotifyStatus(userId, status)
 	}
 }
 
-func (userProcess *UserProcess) NotifyStatus(userId int) {
+func (userProcess *UserProcess) NotifyStatus(userId int, status int) {
 	var msg message.Message
 	msg.Type = message.UserStatusNofityMsgType
 	var notidyStatusMsg message.UserStatusNotifyMsg
 	notidyStatusMsg.UserId = userId
-	notidyStatusMsg.Status = message.UserOnlie
+	notidyStatusMsg.Status = status
 	data, err := json.Marshal(notidyStatusMsg)
 	if err != nil {
 		fmt.Printf("json marshal fail in NotifyStatus, err=%v\n", err)
@@ -137,4 +137,35 @@ func (userProcess *UserProcess) NotifyStatus(userId int) {
 		fmt.Printf("send user status msg fail, err=%v\n", err)
 		return
 	}
+}
+
+func (userProcess *UserProcess) ServerProcessLogout(msg *message.Message) (err error) {
+	// 处理退出
+	var logoutMes message.LogoutMsg
+	err = json.Unmarshal([]byte(msg.Data), &logoutMes)
+	if err != nil {
+		fmt.Printf("json.Unmarshal([]byte(msg.Data), &logoutMes) fail, err=%v\n", err)
+		return err
+	}
+	var responseMsg message.Message
+	responseMsg.Type = message.LogoutRspMsgType
+	var logoutRspMsg message.LogoutRspMsg
+	userProcess.UserId = logoutMes.UserId
+	globalUserMgr.DeleteOnlieUser(logoutMes.UserId)
+	userProcess.NofityOthersOnlieUser(logoutMes.UserId, message.UserOffline)
+	logoutRspMsg.Code = 200
+	data, err := json.Marshal(logoutRspMsg)
+	if err != nil {
+		fmt.Printf("json.Marshal(loginRspMsg) fail, err=%v\n", err)
+		return err
+	}
+	responseMsg.Data = string(data)
+	data, err = json.Marshal(responseMsg)
+	if err != nil {
+		fmt.Printf("json.Marshal(responseMsg) fail, err=%v\n", err)
+		return err
+	}
+	transfer := &utils.Transfer{Conn: userProcess.Conn}
+	err = transfer.WritePkg(data)
+	return
 }
