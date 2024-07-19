@@ -29,7 +29,7 @@ func findTheDistanceValue1(arr1 []int, arr2 []int, d int) int {
 
 func findTheDistanceValue(arr1 []int, arr2 []int, d int) int {
 	// 先对arr2进行排序，之后遍历arr1，假设这个数为x，因为 d>=0
-	// 如果arr2中存在一个数 y 且满足 num−d≤y≤num+d，那么arr1中的数x就不满足题目要求。
+	// 如果arr2中存在一个数 y 且满足 num−d≤y≤num+d，那么arr1中的数x就不满足题目要求
 	sort.Ints(arr2)
 	count := 0
 	for _, num := range arr1 {
