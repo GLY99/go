@@ -25,3 +25,20 @@ func containsPattern(arr []int, m int, k int) bool {
 	}
 	return false
 }
+
+func containsPatternI(arr []int, m int, k int) bool {
+	length := len(arr)
+	for i := 0; i <= length-m*k; i++ {
+		offset := 0
+		for offset < m*k {
+			if arr[i+offset] != arr[i+offset%m] {
+				break
+			}
+			offset++
+		}
+		if offset == m*k {
+			return true
+		}
+	}
+	return false
+}
