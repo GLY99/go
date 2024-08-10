@@ -12,6 +12,8 @@ func TestMain(m *testing.M) {
 func TestUser(t *testing.T) {
 	t.Run("test AddUser func", testAddUser)
 	t.Run("test Adduser1 func", testAddUser1)
+	t.Run("test GetUserById func", testGetUserById)
+	t.Run("test GetUsers func", testGetUsers)
 }
 
 func testAddUser(t *testing.T) {
@@ -34,5 +36,27 @@ func testAddUser1(t *testing.T) {
 	err := user2.AddUser2()
 	if err != nil {
 		t.Log("add user2 failed\n")
+	}
+}
+
+func testGetUserById(t *testing.T) {
+	user := &User{Id: 1}
+	u, err := user.GetUserById()
+	if err != nil {
+		t.Logf("get user by id failed, err=%v", err)
+	} else {
+		t.Log(*u)
+	}
+}
+
+func testGetUsers(t *testing.T) {
+	user := &User{}
+	users, err := user.GetUsers()
+	if err != nil {
+		t.Logf("get users failed, err=%v", err)
+	} else {
+		for _, u := range users {
+			t.Log(*u)
+		}
 	}
 }
