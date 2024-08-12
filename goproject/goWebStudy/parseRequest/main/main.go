@@ -60,7 +60,19 @@ func (myHandler *MyHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	json.Unmarshal(byteSlice, rb)
 	fmt.Println(rb) // &{test test}
 
-	fmt.Fprintf(w, "path: %s, params: %s, headers: %s, request body: %s", path, params, headers, rb)
+	// 响应json数据
+	// 设置 response header
+	w.Header().Set("Content-Type", "appliaction/json")
+	body := &RequestBody{Key3: "response1", Key4: "response2"}
+	jsonStr, _ := json.Marshal(body)
+	w.WriteHeader(202)
+	w.Write(jsonStr)
+}
+
+func testRedire(w http.ResponseWriter, r *http.Request) {
+	// 通过返回进行重定向，这里这只状态码必须在Set后面
+	w.Header().Set("Location", "https://www.baidu.com")
+	w.WriteHeader(302)
 }
 
 func main() {
@@ -71,5 +83,6 @@ func main() {
 
 	// 注册url到不同的handler
 	mux.Handle("/hello", &myHandler)
+	mux.HandleFunc("/testRedire", testRedire)
 	http.ListenAndServe(":8080", mux)
 }
