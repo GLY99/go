@@ -19,7 +19,3 @@ func checkRecord(s string) bool {
 	}
 	return ACount < 2
 }
-
-func main() {
-	checkRecord("PPALLP")
-}
