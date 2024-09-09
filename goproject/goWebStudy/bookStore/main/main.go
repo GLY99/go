@@ -2,15 +2,15 @@ package main
 
 import (
 	"fmt"
-	"goWebStudy/bookStore/controller"
+	"goWebStudy/bookStore/route"
 	"net/http"
 )
 
 func main() {
 	serverMux := http.NewServeMux()
+
 	// 注册路由
-	serverMux.HandleFunc("/login", controller.Login)
-	serverMux.HandleFunc("/regist", controller.Regsit)
+	route.RegistRoute(serverMux)
 
 	// 启动监听
 	err := http.ListenAndServe(":8080", serverMux)

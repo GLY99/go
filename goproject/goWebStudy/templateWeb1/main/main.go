@@ -15,8 +15,8 @@ func testTemplate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// 解析模板 可以通过Must函数来处理解析模板时的错误
-	templateFile1 := path + "/templateWeb/index1.html"
-	templateFile2 := path + "/templateWeb/index2.html"
+	templateFile1 := path + "/templateWeb1/index1.html"
+	templateFile2 := path + "/templateWeb1/index2.html"
 	t, err := template.ParseFiles(templateFile1, templateFile2)
 	if err != nil {
 		fmt.Printf("template.ParseFiles failed, err=%v\n", err)
