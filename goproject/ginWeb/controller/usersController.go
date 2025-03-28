@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -12,6 +13,7 @@ import (
 
 func CreateUser(c *gin.Context) {
 	log := c.MustGet("logger").(*zap.Logger)
+	ctx := context.WithValue(c.Request.Context(), "logger", log)
 	log.Info("start create user")
 	var user model.User
 	// 绑定 JSON 到结构体
@@ -21,7 +23,7 @@ func CreateUser(c *gin.Context) {
 	}
 
 	// 将controller层的model转成dao层的model,然后将数据写入db中
-	err := db.DbHandler.CreateUser(&user)
+	err := db.DbHandler.CreateUser(ctx, &user)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 1, "error": err.Error()})
 		return
@@ -36,6 +38,7 @@ func CreateUser(c *gin.Context) {
 
 func BatchCreateUsers(c *gin.Context) {
 	log := c.MustGet("logger").(*zap.Logger)
+	ctx := context.WithValue(c.Request.Context(), "logger", log)
 	log.Info("start batch create users")
 	var users []*model.User = []*model.User{}
 	if err := c.ShouldBindJSON(&users); err != nil {
@@ -43,7 +46,7 @@ func BatchCreateUsers(c *gin.Context) {
 		return
 	}
 
-	err := db.DbHandler.CreateUsers(users)
+	err := db.DbHandler.CreateUsers(ctx, users)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 1, "error": err.Error()})
 		return
@@ -57,6 +60,7 @@ func BatchCreateUsers(c *gin.Context) {
 
 func DeleteUser(c *gin.Context) {
 	log := c.MustGet("logger").(*zap.Logger)
+	ctx := context.WithValue(c.Request.Context(), "logger", log)
 	log.Info("start delete user")
 	// 从 URL 路径参数中获取 id
 	id := c.Param("id") // 注意：id 是字符串类型
@@ -65,7 +69,7 @@ func DeleteUser(c *gin.Context) {
 	conditions := make([]db.Condition, 0)
 	conditions = append(conditions, db.Condition{Field: "id", Operator: "=", Value: id})
 
-	err := db.DbHandler.DeleteUsers(conditions)
+	err := db.DbHandler.DeleteUsers(ctx, conditions)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 1, "error": err.Error()})
 		return
@@ -75,13 +79,14 @@ func DeleteUser(c *gin.Context) {
 
 func GetUser(c *gin.Context) {
 	log := c.MustGet("logger").(*zap.Logger)
+	ctx := context.WithValue(c.Request.Context(), "logger", log)
 	log.Info("start get user")
 	id := c.Param("id")
 
 	conditions := make([]db.Condition, 0)
 	conditions = append(conditions, db.Condition{Field: "id", Operator: "=", Value: id})
 
-	users, err := db.DbHandler.GetUsers(conditions)
+	users, err := db.DbHandler.GetUsers(ctx, conditions)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 1, "error": err.Error()})
 		return
@@ -95,6 +100,7 @@ func GetUser(c *gin.Context) {
 
 func ListUsers(c *gin.Context) {
 	log := c.MustGet("logger").(*zap.Logger)
+	ctx := context.WithValue(c.Request.Context(), "logger", log)
 	log.Info("start list users")
 	queryParams := c.Request.URL.Query()
 
@@ -115,7 +121,7 @@ func ListUsers(c *gin.Context) {
 		}
 		conditions = append(conditions, db.Condition{Field: field, Operator: operator, Value: tmpValues})
 	}
-	users, err := db.DbHandler.GetUsers(conditions)
+	users, err := db.DbHandler.GetUsers(ctx, conditions)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 1, "error": err.Error()})
 		return
@@ -129,6 +135,7 @@ func ListUsers(c *gin.Context) {
 
 func UpdateUser(c *gin.Context) {
 	log := c.MustGet("logger").(*zap.Logger)
+	ctx := context.WithValue(c.Request.Context(), "logger", log)
 	log.Info("start update user")
 	id := c.Param("id")
 	var updates map[string]interface{} = make(map[string]interface{})
@@ -139,7 +146,7 @@ func UpdateUser(c *gin.Context) {
 	}
 	conditions := make([]db.Condition, 0)
 	conditions = append(conditions, db.Condition{Field: "id", Operator: "=", Value: id})
-	err := db.DbHandler.UpdateUsers(updates, conditions)
+	err := db.DbHandler.UpdateUsers(ctx, updates, conditions)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 1, "error": err.Error()})
 		return
