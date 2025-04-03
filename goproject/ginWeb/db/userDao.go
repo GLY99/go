@@ -6,6 +6,7 @@ import (
 	"ginWeb/config"
 	"ginWeb/model"
 	"ginWeb/utils"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -13,7 +14,10 @@ import (
 func (handler *dbHandler) CreateUser(ctx context.Context, user *model.User) error {
 	log := utils.LoggerFromContext(ctx, "logger")
 	// 自动事务
-	return handler.db.Transaction(func(tx *gorm.DB) error {
+	// go中的闭包；可以在不破坏函数结构的情况下对函数进行扩展
+	// 创建带重试的事务执行器
+	retryTx := WithRetry(handler.db, 3, 100*time.Millisecond)
+	return retryTx(func(tx *gorm.DB) error {
 		log.Info("start create user with db")
 		result := tx.Create(user)
 		if result.Error != nil {
