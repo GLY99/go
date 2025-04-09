@@ -27,7 +27,7 @@ type TransactionFunc func(*gorm.DB) error
 
 var DbHandler *dbHandler = &dbHandler{}
 
-func InitDB() {
+func InitDB() error {
 	// MySQL连接示例
 	dsn := fmt.Sprintf(
 		"%s:%s@%s(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local", config.Cfg.DB.UserName,
@@ -35,13 +35,13 @@ func InitDB() {
 		config.Cfg.DB.DBName)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
-		panic(fmt.Sprintf("failed to connect database; err: %s", err.Error()))
+		return fmt.Errorf("failed to connect database; err: %s", err.Error())
 	}
 
 	// 获取底层的 sql.DB 对象
 	sqlDB, err := db.DB()
 	if err != nil {
-		panic(fmt.Sprintf("failed to get sql.DB; err: %s", err.Error()))
+		return fmt.Errorf("failed to get sql.DB; err: %s", err.Error())
 	}
 
 	// 配置连接池
@@ -50,6 +50,7 @@ func InitDB() {
 	sqlDB.SetConnMaxLifetime(time.Hour) // 连接可复用的最大时间
 
 	DbHandler.db = db
+	return nil
 }
 
 func WithRetry(db *gorm.DB, maxRetries int, delay time.Duration) func(TransactionFunc, ...*sql.TxOptions) error {

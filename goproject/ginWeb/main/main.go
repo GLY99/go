@@ -32,7 +32,7 @@ func main() {
 	// 加载配置文件
 	err := config.LoadConfig()
 	if err != nil {
-		log.Panic(err)
+		log.Printf("load config error: %v\n", err)
 		os.Exit(1)
 	}
 	// 初始化日志
@@ -45,7 +45,11 @@ func main() {
 	middleware.RegisterMiddlewares(r)
 
 	// 创建db连接
-	db.InitDB()
+	err = db.InitDB()
+	if err != nil {
+		log.Printf("init db error: %v\n", err)
+		os.Exit(1)
+	}
 
 	// 定义路由和处理函数
 	routing.InitRouting(r)
