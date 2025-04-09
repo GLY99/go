@@ -28,12 +28,13 @@ type LOGConfig struct {
 
 var Cfg *Config = &Config{}
 
-func LoadConfig() {
+func LoadConfig() error {
 	curPath, err := os.Getwd()
 	if err != nil {
-		panic(fmt.Sprintf("error getting current path: %s", err.Error()))
+		return fmt.Errorf("getting current path has error: %s", err.Error())
 	}
 	if _, err = toml.DecodeFile(curPath+"/config/config.toml", Cfg); err != nil {
-		panic(fmt.Sprintf("error decoding TOML: %s", err.Error()))
+		return fmt.Errorf("decoding TOML has error: %s", err.Error())
 	}
+	return nil
 }

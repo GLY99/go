@@ -7,9 +7,11 @@ import (
 	"ginWeb/logger"
 	"ginWeb/middleware"
 	"ginWeb/routing"
+	"log"
 	"net/http"
 	"os"
 	"os/signal"
+	"runtime/debug"
 	"syscall"
 	"time"
 
@@ -19,9 +21,20 @@ import (
 )
 
 func main() {
-	// 加载配置文件
-	config.LoadConfig()
+	defer func() {
+		if err := recover(); err != nil {
+			log.Printf("initialization panic: %v\n", err)
+			debug.PrintStack()
+			os.Exit(1)
+		}
+	}()
 
+	// 加载配置文件
+	err := config.LoadConfig()
+	if err != nil {
+		log.Panic(err)
+		os.Exit(1)
+	}
 	// 初始化日志
 	logger.InitLogger()
 
@@ -53,7 +66,7 @@ func main() {
 	go func() {
 		logger.Logger.Info(fmt.Sprintf("服务启动，监听端口 %s", srv.Addr))
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			logger.Logger.Fatal(fmt.Sprintf("服务器错误: %v", err))
+			logger.Logger.Fatal(fmt.Sprintf("服务器错误: %v", err)) // Fatal内部会执行os.Exit(1)
 		}
 	}()
 
