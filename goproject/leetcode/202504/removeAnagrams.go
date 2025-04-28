@@ -1,6 +1,6 @@
 package main
 
-// https://leetcode.cn/problems/find-resultant-array-after-removing-anagrams/?envType=problem-list-v2&envId=sorting
+//https://leetcode.cn/problems/find-resultant-array-after-removing-anagrams/?envType=problem-list-v2&envId=sorting
 
 func removeAnagrams(words []string) []string {
 	compare := func(idx int) bool {
