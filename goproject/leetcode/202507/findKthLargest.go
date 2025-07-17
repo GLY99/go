@@ -9,23 +9,34 @@ func findKthLargest(nums []int, k int) int {
 
 func quickSelect(nums []int, l, r, k int) int {
 	if l == r {
-		return nums[k]
+		return nums[l]
 	}
-	partition := nums[l]
-	i := l - 1
-	j := r + 1
-	for i < j {
-		for i++; nums[i] < partition; i++ {
-		}
-		for j--; nums[j] > partition; j-- {
-		}
-		if i < j {
-			nums[i], nums[j] = nums[j], nums[i]
-		}
-	}
-	if k <= j {
-		return quickSelect(nums, l, j, k)
+	pos := partition(nums, l, r)
+	if k == pos {
+		return nums[pos]
+	} else if k < pos {
+		return quickSelect(nums, l, pos-1, k)
 	} else {
-		return quickSelect(nums, j+1, r, k)
+		return quickSelect(nums, pos+1, r, k)
 	}
+}
+
+func partition(nums []int, l, r int) int {
+	pivot := nums[l]
+	i := l
+	j := r
+	for i < j {
+		for i < j && nums[j] >= pivot {
+			j--
+		}
+		for i < j && nums[i] <= pivot {
+			i++
+		}
+		if l >= r {
+			break
+		}
+		nums[i], nums[j] = nums[j], nums[i]
+	}
+	nums[i], nums[l] = nums[l], nums[i]
+	return i
 }
