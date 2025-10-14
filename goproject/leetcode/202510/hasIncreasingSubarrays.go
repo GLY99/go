@@ -11,24 +11,24 @@ func hasIncreasingSubarrays(nums []int, k int) bool {
 		return true
 	}
 	for i := 0; i <= n-2*k; i++ {
-		flag1 := true
+		flag := true
 		for j := i; j < i+k-1; j++ {
 			if nums[j] >= nums[j+1] {
-				flag1 = false
+				flag = false
 				break
 			}
 		}
-		if !flag1 {
+		if !flag {
 			continue
 		}
 
 		for j := i + k; j < i+2*k-1; j++ {
 			if nums[j] >= nums[j+1] {
-				flag1 = false
+				flag = false
 				break
 			}
 		}
-		if flag1 {
+		if flag {
 			return true
 		}
 	}
