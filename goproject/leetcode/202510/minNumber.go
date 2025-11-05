@@ -1,5 +1,7 @@
 package main
 
+// https://leetcode.cn/problems/form-smallest-number-from-two-digit-arrays/submissions/676136638/?envType=problem-list-v2&envId=array
+
 func minNumber(nums1 []int, nums2 []int) int {
 	mapping := make(map[int]int)
 	nums1_min := nums1[0]
