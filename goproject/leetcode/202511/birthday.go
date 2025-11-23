@@ -4,7 +4,7 @@ import (
 	"math/rand"
 )
 
-func randomBrithday(count int) (sameCounter, diffCounter int) {
+func randomBirthday(count int) (sameCounter, diffCounter int) {
 	// 模拟count次
 	for i := 0; i < count; i++ {
 		set := make(map[int]interface{})
