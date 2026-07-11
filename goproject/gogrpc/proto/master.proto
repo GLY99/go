@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package master;
+
+option go_package = "./proto";
+
+// Master 服务定义 - Master 提供的服务
+service MasterService {
+  // Agent 注册到 Master
+  rpc RegisterAgent (RegisterRequest) returns (RegisterResponse);
+  
+  // Agent 心跳
+  rpc Heartbeat (HeartbeatRequest) returns (HeartbeatResponse);
+}
+
+// 注册请求
+message RegisterRequest {
+  string agent_id = 1;
+  string agent_name = 2;
+  string address = 3;           // Agent 的地址，如 localhost:50051
+  int32 max_tasks = 4;          // 最大并发任务数
+  repeated string capabilities = 5; // 能力列表: ["计算", "分析", "处理"]
+}
+
+message RegisterResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// 心跳请求
+message HeartbeatRequest {
+  string agent_id = 1;
+  int32 running_tasks = 2;
+  int32 load = 3;
+}
+
+message HeartbeatResponse {
+  bool success = 1;
+  string action = 2;  // "continue", "stop", "update"
+}

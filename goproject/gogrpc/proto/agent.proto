@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package agent;
+
+option go_package = "./proto";
+
+// Agent 服务定义 - Agent 提供的服务
+service AgentService {
+  // 执行任务，流式返回结果
+  rpc ExecuteTask (TaskRequest) returns (stream TaskResponse);
+  
+  // 简单的一问一答模式
+  rpc SimpleTask (TaskRequest) returns (TaskResponse);
+  
+  // 健康检查
+  rpc HealthCheck (HealthRequest) returns (HealthResponse);
+}
+
+// 任务请求
+message TaskRequest {
+  string task_id = 1;
+  string task_type = 2;
+  string input = 3;
+  map<string, string> parameters = 4;
+}
+
+// 任务响应
+message TaskResponse {
+  string task_id = 1;
+  string content = 2;
+  int32 progress = 3;
+  bool is_complete = 4;
+  string status = 5;
+  string error_msg = 6;
+}
+
+// 健康检查
+message HealthRequest {
+  string agent_id = 1;
+}
+
+message HealthResponse {
+  string agent_id = 1;
+  string status = 2;      // "healthy", "busy", "unhealthy"
+  int32 load = 3;         // 负载百分比
+  int32 running_tasks = 4; // 当前运行任务数
+  int32 max_tasks = 5;    // 最大并发任务数
+}
